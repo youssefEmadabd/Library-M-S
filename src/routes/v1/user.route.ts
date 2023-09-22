@@ -1,6 +1,12 @@
-import express from 'express';
+import {Router} from 'express';
 import {userController} from '../../controllers';
+import asyncHandler from 'express-async-handler';
 
-const router = express.Router();
+import {Auth} from '../../middlewares/';
+
+const router = Router();
+
+router.post('/login', asyncHandler(userController.login));
+router.post('/register/:role', asyncHandler(userController.register));
 
 export default router;

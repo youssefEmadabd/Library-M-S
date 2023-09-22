@@ -1,6 +1,9 @@
-import express from 'express';
+import {Router} from 'express';
 import {userController} from '../../controllers';
+import asyncHandler from 'express-async-handler';
 
-const router = express.Router();
+import {Auth} from '../../middlewares/';
+
+const router = Router();
 
 export default router;

@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import {Borrower} from "../models";
+import { Request, Response, NextFunction } from "express";
+import { Borrower, User } from "../models";
 import logger from "../config/logger";
 import Controller from "./Controller";
-import {BorrowerService} from '../services'
+import { BorrowerService, UserService } from '../services'
 
-const borrowerService = new BorrowerService(Borrower)
-class BorrowerController extends Controller<Borrower,BorrowerService>{
+class BorrowerController extends Controller<Borrower, BorrowerService>{
+    
 }
 
 export const borrowerController = new BorrowerService(Borrower);
