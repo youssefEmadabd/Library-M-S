@@ -1,16 +1,16 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/db';
-
+import { Borrower } from './borrower.model';
+import { BorrowerBook } from './borrowerBook.model';
 class Book extends Model {
   public id!: number;
-  public borrowerId!: number;
   public title!: string;
   public author!: string;
   public ISBN!: string;
   public quantity!: number;
   public shelfLocation!: number;
-  public createdAt!: Date;
-  public updatedAt!: Date;
+  public created_at!: Date;
+  public updated_at!: Date;
 }
 
 Book.init(
@@ -19,14 +19,6 @@ Book.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-    },
-    borrowerId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'borrowers',
-        key: 'id',
-      },
     },
     title: {
       type: DataTypes.STRING,
@@ -48,12 +40,12 @@ Book.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    updatedAt: {
+    updated_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
@@ -62,19 +54,20 @@ Book.init(
   {
     sequelize,
     modelName: 'Book',
-    tableName: 'Books', // Change to the appropriate table name for sellers
+    tableName: 'books', // Change to the appropriate table name for sellers
     timestamps: false,
   }
 );
-
+Book.belongsToMany(Borrower, { through:BorrowerBook })
+Borrower.belongsToMany(Book, { through:BorrowerBook });
 // Sequelize hooks to update the timestamps automatically
 Book.addHook('beforeCreate', (book: Book) => {
-  book.createdAt = new Date();
-  book.updatedAt = new Date();
+  book.created_at = new Date();
+  book.updated_at = new Date();
 });
 
 Book.addHook('beforeUpdate', (book: Book) => {
-  book.updatedAt = new Date();
+  book.updated_at = new Date();
 });
 
-export {Book};
+export { Book };

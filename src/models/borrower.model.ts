@@ -1,5 +1,8 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/db'
+import { User } from './user.model';
+import { Book } from './book.model';
+import { BorrowerBook } from './borrowerBook.model';
 
 class Borrower extends Model {
   public id!: number;
@@ -41,7 +44,8 @@ Borrower.init(
     timestamps: false,
   }
 );
-
+User.hasMany(Borrower, {foreignKey: 'userId'})
+Borrower.belongsTo(User, {foreignKey: 'userId'})
 
 // Sequelize hook to update the timestamps automatically
 Borrower.addHook('beforeCreate', (borrower: Borrower) => {
@@ -53,4 +57,4 @@ Borrower.addHook('beforeUpdate', (borrower: Borrower) => {
   borrower.updated_at = new Date();
 });
 
-export {Borrower};
+export { Borrower };

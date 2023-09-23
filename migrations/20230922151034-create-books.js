@@ -9,15 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      borrowerId: {
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'borrowers',
-          key: 'id',
-          as: 'borrowerId',
-        }
-      },
       title: {
         type: Sequelize.STRING
       },

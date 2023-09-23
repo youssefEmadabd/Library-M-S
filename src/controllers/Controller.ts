@@ -1,7 +1,7 @@
 import { Response as IRes } from 'express';
 import httpStatus from 'http-status';
 
-import {Service} from '../services';
+import { Service } from '../services';
 import ApiError from '../utils/apiError';
 import { RequestInterface as IReq } from '../types';
 import autoBind from 'auto-bind';
@@ -16,8 +16,7 @@ class Controller<IModel, MyService extends Service<IModel>> {
 
     async create(req: IReq, res: IRes): Promise<void> {
         try {
-            const myService = this.service;
-            const result = await myService.create({
+            const result = await this.service.create({
                 ...req.body,
             });
             res.status(httpStatus.CREATED).send(result);
@@ -28,23 +27,26 @@ class Controller<IModel, MyService extends Service<IModel>> {
 
     async get(req: IReq, res: IRes): Promise<void> {
         try {
-            const myService = this.service;
             const id = req.params.id;
-            const filter: object = { id };
-            const result = await myService.get(filter);
+            const filter: object = { where: { id } };
+            const result = await this.service.get(filter);
             if (!result) throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
-            res.status(httpStatus.ACCEPTED).send({ ...result, found: true });
+            res.status(httpStatus.ACCEPTED).send({ ...result });
         } catch (err) {
             throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, err.message);
         }
     }
 
+    async getAll(req: IReq, res:IRes): Promise<void>{
+        const result = await this.service.get({});
+        res.status(httpStatus.ACCEPTED).send({ ...result });
+    }
+
     async update(req: IReq, res: IRes): Promise<void> {
         try {
-            const myService = this.service;
-            const id = req.user.sub;
-            const filter: Omit<UpdateOptions<any>,"Returning"> = { where:{id} };
-            const result = await myService.update(req.body, filter);
+            const id = req.params.id;
+            const filter: Omit<UpdateOptions<any>, "Returning"> = { where: { id } };
+            const result = await this.service.update(req.body, filter);
             res.status(httpStatus.OK).send(result);
         } catch (err) {
             throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, err.message);
@@ -53,12 +55,11 @@ class Controller<IModel, MyService extends Service<IModel>> {
 
     async delete(req: IReq, res: IRes): Promise<void> {
         try {
-            const myService : Service<IModel> = this.service;
-            const id:string = req.user.sub;
-            const filter: object = { id };
-            const result = await myService.delete(filter);
+            const id: string = req.params.id;
+            const filter: object = { where:{id} };
+            const result = await this.service.delete(filter);
             if (!result) throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
-            res.status(httpStatus.NO_CONTENT).send(result);
+            res.status(httpStatus.NO_CONTENT).send({result});
         } catch (err) {
             throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, err.message);
         }

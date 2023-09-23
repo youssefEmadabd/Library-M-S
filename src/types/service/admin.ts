@@ -4,8 +4,8 @@ import { IUser } from './user';
 export interface IAdmin {
     id: number;
     userId: IUser;
-    createdAt: Date;
-    updatedAt: Date;
+    created_at: Date;
+    updated_at: Date;
 }
 export interface IAdminInput extends Optional<IAdmin, 'id'> {}
 export interface IAdminOutput extends Required<IAdmin> {}

@@ -1,11 +1,12 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/db';
+import { User } from './user.model';
 
 class Admin extends Model {
   public id!: number;
   public userId!: number; // Foreign key for the User model
-  public createdAt!: Date;
-  public updatedAt!: Date;
+  public created_at!: Date;
+  public updated_at!: Date;
 }
 
 Admin.init(
@@ -23,12 +24,12 @@ Admin.init(
         key: 'id',
       },
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    updatedAt: {
+    updated_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
@@ -41,14 +42,16 @@ Admin.init(
     timestamps: false,
   }
 );
+User.hasMany(Admin, {foreignKey: 'userId'})
+Admin.belongsTo(User, {foreignKey: 'userId'})
 
 Admin.addHook('beforeCreate', (admin: Admin) => {
-  admin.createdAt = new Date();
-  admin.updatedAt = new Date();
+  admin.created_at = new Date();
+  admin.updated_at = new Date();
 });
 
 Admin.addHook('beforeUpdate', (admin: Admin) => {
-  admin.updatedAt = new Date();
+  admin.updated_at = new Date();
 });
 
 export {Admin};
